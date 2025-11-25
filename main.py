@@ -1,4 +1,5 @@
 import os
+import time
 import mysql.connector
 from fastapi import FastAPI
 from dotenv import load_dotenv
@@ -18,6 +19,20 @@ def get_connection():
 @app.get("/")
 def home():
     return {"message": "API funcionando proyecto final computación en la nube grupo 05"}
+
+@app.get("/loadtest/cpu")
+def cpu_stress(seconds: int = 5):
+    end_time = time.time() + seconds
+    x = 0
+    
+    while time.time() < end_time:
+        x += 1
+
+    return {
+        "message": f"CPU Stress test completed",
+        "duration_seconds": seconds,
+        "operations": x
+    }
 
 @app.get("/series")
 def get_series():
