@@ -6,6 +6,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
+from concurrent.futures import ProcessPoolExecutor
 
 load_dotenv()
 
@@ -138,21 +139,29 @@ def borrar_serie(serie_id: int):
 
     return RedirectResponse(url="/series", status_code=303)
 
-@app.get("/loadtest/cpu")
-def cpu_stress(seconds: int = 5):
-    if seconds < 1 or seconds > 120:
-        raise HTTPException(status_code=400, detail="Seconds must be between 1 and 120")
-
-    start = time.time()
-    end = start + seconds
+def busy_loop(duration: int):
+    end_time = time.time() + duration
     x = 0
-
-    while time.time() < end:
+    while time.time() < end_time:
         x += 1
+    return x
+
+@app.get("/load/cpu")
+def load_cpu(seconds: int = 10):
+    if seconds < 1 or seconds > 60:
+        return {"error": "Seconds must be between 1 and 60"}
+
+    # Detecta cantidad de cores
+    import multiprocessing
+    cores = multiprocessing.cpu_count()
+
+    # Ejecuta un proceso por core
+    with ProcessPoolExecutor(max_workers=cores) as executor:
+        results = list(executor.map(busy_loop, [seconds] * cores))
 
     return {
-        "message": "CPU Stress test completed",
+        "message": "CPU Load Completed",
+        "cores_used": cores,
         "seconds": seconds,
-        "operations": x,
-        "timestamp": int(time.time())
+        "ops_total": sum(results)
     }
