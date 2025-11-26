@@ -140,10 +140,19 @@ def borrar_serie(serie_id: int):
 
 @app.get("/loadtest/cpu")
 def cpu_stress(seconds: int = 5):
-    end = time.time() + seconds
+    if seconds < 1 or seconds > 120:
+        raise HTTPException(status_code=400, detail="Seconds must be between 1 and 120")
+
+    start = time.time()
+    end = start + seconds
     x = 0
 
     while time.time() < end:
         x += 1
 
-    return {"message": "CPU Stress test completed", "seconds": seconds, "operations": x}
+    return {
+        "message": "CPU Stress test completed",
+        "seconds": seconds,
+        "operations": x,
+        "timestamp": int(time.time())
+    }
