@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-3xl font-bold mb-6 text-center">Buscar serie por título</h2>
+
+<!-- Contenedor para centrar el formulario -->
+<div class="flex justify-center mb-6">
+    <form class="flex space-x-3" method="get">
+        <input 
+            type="text" 
+            name="titulo" 
+            placeholder="Buscar..." 
+            value="{{ titulo }}"
+            class="px-4 py-2 border rounded w-64"
+        >
+        <button class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+            Buscar
+        </button>
+    </form>
+</div>
+
+{% if results %}
+<!-- Contenedor para centrar la tabla -->
+<div class="flex justify-center">
+    <table class="bg-white shadow rounded-lg overflow-hidden w-3/4 text-center">
+        <thead class="bg-indigo-600 text-white">
+            <tr>
+                <th class="py-3 px-4">Título</th>
+                <th class="py-3 px-4">Año</th>
+                <th class="py-3 px-4">Género</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for s in results %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-3 px-4">{{ s.titulo }}</td>
+                <td class="py-3 px-4">{{ s.anio_lanzamiento }}</td>
+                <td class="py-3 px-4">{{ s.genero }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-gray-600 text-center">No se encontraron resultados.</p>
+{% endif %}
+
+{% endblock %}

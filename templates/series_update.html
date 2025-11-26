@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="text-3xl font-bold mb-6 text-center">Editar serie</h2>
+
+<!-- Contenedor para centrar el formulario -->
+<div class="flex justify-center">
+    <form method="post" class="bg-white p-6 shadow rounded-lg w-1/2">
+
+        <label class="block mb-3">
+            <span>Título</span>
+            <input type="text" name="titulo" value="{{ serie.titulo }}" required class="w-full p-2 border rounded">
+        </label>
+
+        <label class="block mb-3">
+            <span>Descripción</span>
+            <textarea name="descripcion" class="w-full p-2 border rounded">{{ serie.descripcion }}</textarea>
+        </label>
+
+        <label class="block mb-3">
+            <span>Año lanzamiento</span>
+            <input type="number" name="anio_lanzamiento" value="{{ serie.anio_lanzamiento }}" required class="w-full p-2 border rounded">
+        </label>
+
+        <label class="block mb-3">
+            <span>Género</span>
+            <input type="text" name="genero" value="{{ serie.genero }}" required class="w-full p-2 border rounded">
+        </label>
+
+        <button class="mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Actualizar
+        </button>
+
+    </form>
+</div>
+
+{% endblock %}

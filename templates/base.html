@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else "Series App" }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+    <header class="bg-indigo-600 text-white shadow-lg">
+        <nav class="container mx-auto flex items-center justify-between p-4">
+            <h1 class="text-2xl font-bold">Series App</h1>
+
+            <ul class="flex space-x-6 text-lg">
+                <li><a href="/" class="hover:text-gray-200">Inicio</a></li>
+                <li><a href="/series" class="hover:text-gray-200">Listar series</a></li>
+                <li><a href="/series/search" class="hover:text-gray-200">Buscar por título</a></li>
+                <li><a href="/series/create" class="hover:text-gray-200">Crear serie</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto py-10 text-center">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>
