@@ -26,6 +26,13 @@ def get_connection():
         database=os.getenv("DB_NAME")
     )
 
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+        "message": "Server running successfully"
+    }
+
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
