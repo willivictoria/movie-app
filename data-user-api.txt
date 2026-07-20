@@ -1,0 +1,44 @@
+#!/bin/bash
+
+sudo dnf update -y
+sudo dnf install -y python3 python3-pip python3-virtualenv git
+
+sudo mkdir -p /opt/movie-app
+sudo chown ec2-user:ec2-user /opt/movie-app
+
+sudo -u ec2-user /usr/bin/git clone https://github.com/willivictoria/movie-app.git /opt/movie-app
+
+sudo -u ec2-user python3 -m venv /opt/movie-app/venv
+sudo -u ec2-user /opt/movie-app/venv/bin/pip install --upgrade pip
+sudo -u ec2-user /opt/movie-app/venv/bin/pip install -r /opt/movie-app/requirements.txt
+
+cat <<EOT > /opt/movie-app/.env
+DB_HOST=netflix-db.cru0wc6iysnu.us-east-1.rds.amazonaws.com
+DB_USER=movieappuser
+DB_PASS=\$sYst3m4dm1n\$
+DB_NAME=netflix_db
+EOT
+
+chown ec2-user:ec2-user /opt/movie-app/.env
+chmod 600 /opt/movie-app/.env
+
+cat <<EOT > /etc/systemd/system/fastapi.service
+[Unit]
+Description=FastAPI Service
+After=network.target
+
+[Service]
+User=ec2-user
+Group=ec2-user
+WorkingDirectory=/opt/movie-app
+EnvironmentFile=/opt/movie-app/.env
+ExecStart=/opt/movie-app/venv/bin/python -m uvicorn main:app --host 0.0.0.0 --port 8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOT
+
+systemctl daemon-reload
+systemctl enable fastapi.service
+systemctl start fastapi.service
